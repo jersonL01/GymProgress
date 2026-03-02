@@ -23,6 +23,7 @@ model User {
   exercises     Exercise[]
   entries       Entry[]
 }
+
 model Exercise {
   id        String   @id @default(cuid())
   name      String
@@ -31,30 +32,29 @@ model Exercise {
   createdAt DateTime @default(now())
   entries   Entry[]
 
-  @@unique([userId, name])
+  
+  catalogId Int
+  category  String?
+
+  @@unique([userId, catalogId], name: "userId_catalogId")
   @@index([userId])
 }
-
 model Entry {
-  id         String   @id @default(cuid())
-  date       DateTime
-  weightKg   Float
-  reps       Int
-  sets       Int
-  notes      String?
+  id       String   @id @default(cuid())
+  date     DateTime
+  weightKg Float
+  reps     Int
+  sets     Int
+  notes    String?
 
   userId     String
   user       User     @relation(fields: [userId], references: [id])
 
   exerciseId String
-  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  exercise   Exercise  @relation(fields: [exerciseId], references: [id])
 
-  createdAt  DateTime @default(now())
-
-  @@index([userId, date])
-  @@index([exerciseId, date])
+  createdAt DateTime @default(now())
 }
-
 /** NextAuth tables **/
 model Account {
   id                 String  @id @default(cuid())

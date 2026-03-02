@@ -1,9 +1,9 @@
-import NextAuth from "next-auth";
+import NextAuth, { type NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/app/lib/prisma";
 import bcrypt from "bcryptjs";
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
   providers: [
     Credentials({
@@ -21,20 +21,30 @@ const handler = NextAuth({
         const user = await prisma.user.findUnique({
           where: { username: usuario },
         });
-
-        if (!user) return null;
+        if (!user?.passwordHash) return null;
 
         const ok = await bcrypt.compare(password, user.passwordHash);
         if (!ok) return null;
 
-        // Lo que retorna aquí queda como "user" en la sesión JWT
-        return { id: user.id, name: user.username };
+        // ✅ importante: devolver id y name
+        return { id: user.id, name: user.username, email: user.username };
       },
     }),
   ],
-  pages: {
-    signIn: "/login",
+  pages: { signIn: "/login" },
+  callbacks: {
+    async jwt({ token, user }) {
+      // ✅ guardar id en el token al iniciar sesión
+      if (user?.id) (token as any).id = user.id;
+      return token;
+    },
+    async session({ session, token }) {
+      // ✅ exponer id en session.user
+      (session.user as any).id = (token as any).id;
+      return session;
+    },
   },
-});
+};
 
+const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
