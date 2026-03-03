@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
@@ -42,7 +44,6 @@ export default function LoginPage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#0B0F14] text-white">
-      {/* Background glow */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-32 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-blue-600/20 blur-3xl" />
         <div className="absolute -bottom-40 right-[-120px] h-[520px] w-[520px] rounded-full bg-cyan-400/10 blur-3xl" />
@@ -51,9 +52,7 @@ export default function LoginPage() {
 
       <div className="relative mx-auto flex min-h-screen max-w-6xl items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
-          {/* Card */}
           <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.55)] backdrop-blur-xl">
-            {/* Header */}
             <div className="mb-6">
               <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">
                 <span className="h-2 w-2 rounded-full bg-blue-500 shadow-[0_0_0_6px_rgba(59,130,246,0.15)]" />
@@ -68,7 +67,6 @@ export default function LoginPage() {
               </p>
             </div>
 
-            {/* Error */}
             {error && (
               <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
                 {error}
@@ -76,14 +74,12 @@ export default function LoginPage() {
             )}
 
             <form onSubmit={onSubmit} className="space-y-4">
-              {/* Usuario */}
               <div>
                 <label className="text-sm font-semibold text-white/90">
                   Usuario
                 </label>
 
                 <div className="mt-2 flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 transition focus-within:border-blue-500/60 focus-within:ring-4 focus-within:ring-blue-500/15">
-                  {/* icon */}
                   <svg
                     viewBox="0 0 24 24"
                     className="h-5 w-5 text-white/60"
@@ -107,14 +103,12 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {/* Password */}
               <div>
                 <label className="text-sm font-semibold text-white/90">
                   Contraseña
                 </label>
 
                 <div className="mt-2 flex items-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 transition focus-within:border-blue-500/60 focus-within:ring-4 focus-within:ring-blue-500/15">
-                  {/* icon */}
                   <svg
                     viewBox="0 0 24 24"
                     className="h-5 w-5 text-white/60"
@@ -150,7 +144,6 @@ export default function LoginPage() {
                   <span className="text-xs text-white/50">
                     Usa una contraseña segura.
                   </span>
-
                   <Link
                     href="/forgot-password"
                     className="text-xs font-semibold text-blue-300 hover:text-blue-200 hover:underline"
@@ -160,7 +153,6 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {/* Button */}
               <button
                 type="submit"
                 disabled={loading}
@@ -169,20 +161,17 @@ export default function LoginPage() {
                 <span className="relative z-10">
                   {loading ? "Ingresando..." : "Ingresar"}
                 </span>
-                {/* subtle shine */}
                 <span className="pointer-events-none absolute inset-0 opacity-0 transition group-hover:opacity-100">
                   <span className="absolute -left-24 top-0 h-full w-24 skew-x-[-20deg] bg-white/20 blur-md animate-[shine_1.2s_ease-in-out_infinite]" />
                 </span>
               </button>
 
-              {/* Divider */}
               <div className="flex items-center gap-3 pt-1">
                 <div className="h-px flex-1 bg-white/10" />
                 <span className="text-xs text-white/50">o</span>
                 <div className="h-px flex-1 bg-white/10" />
               </div>
 
-              {/* Register */}
               <div className="flex items-center justify-between text-sm">
                 <Link
                   href="/register"
@@ -194,14 +183,12 @@ export default function LoginPage() {
             </form>
           </div>
 
-          {/* Footer note */}
           <p className="mt-6 text-center text-xs text-white/45">
             © {new Date().getFullYear()} • Gym Rat
           </p>
         </div>
       </div>
 
-      {/* keyframes */}
       <style jsx>{`
         @keyframes shine {
           0% {
