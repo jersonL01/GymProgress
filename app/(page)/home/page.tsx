@@ -3,6 +3,7 @@ import HomeActions from "@/app/components/HomeActions";
 import StatCard from "@/app/components/StatCard";
 import LogoutButton from "@/app/components/LogoutButton";
 import UserBadge from "@/app/components/UserBadge";
+import ExerciseSummaryList from "@/app/components/ExerciseSummaryList";
 
 export default function HomePage() {
   return (
@@ -30,30 +31,7 @@ export default function HomePage() {
             <LogoutButton />
           </div>
 
-          <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.06] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.45)] backdrop-blur-xl">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h1 className="text-xl font-extrabold tracking-tight">
-                  Tu resumen
-                </h1>
-                <p className="mt-1 text-sm text-white/70">
-                  Mira tus números rápidos y entra a registrar o revisar progreso.
-                </p>
-              </div>
-
-              <div className="hidden sm:flex items-center gap-2 rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-white/70">
-                <span className="h-2 w-2 rounded-full bg-blue-500 shadow-[0_0_0_6px_rgba(59,130,246,0.15)]" />
-                Online
-              </div>
-            </div>
-
-            <div className="mt-5 grid gap-3 sm:grid-cols-3">
-              {/* Si tu StatCard acepta className, pásaselo. Si no, igual se ve ok. */}
-              <StatCard label="Ejercicios" value="0" />
-              <StatCard label="Registros" value="0" />
-              <StatCard label="Mejor 1RM" value="—" />
-            </div>
-          </div>
+          <ExerciseSummaryList/>
 
           <div className="mt-6">
             <HomeActions />

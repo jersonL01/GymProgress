@@ -1,28 +1,33 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function AppHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-white/[0.04] backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-5">
-        <div>
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-              <span className="h-2 w-2 rounded-full bg-blue-500 shadow-[0_0_0_6px_rgba(59,130,246,0.15)]" />
-            </div>
+        <div className="flex items-center gap-3">
+          
+        <div className="relative h-17 w-20 overflow-hidden rounded-2xl bg-black/20 ring-1 ring-white/10">
+        <Image
+          src="/iconGym.png"
+          alt="GymRat"
+          fill
+          priority
+          className="object-contain scale-[1.8] "
+        />
+      </div>
 
-            <div>
-              <h1 className="text-xl font-extrabold tracking-tight text-white sm:text-2xl">
-                GymRat
-              </h1>
-              <p className="mt-1 text-sm text-white/70">
-                Guarda tus pesos y mira tu progreso.
-              </p>
-            </div>
+          <div className="leading-tight">
+          
+            <p className="text-sm font-extrabold text-white">GymRat</p>
+            <p className="mt-1 text-sm text-white/70">
+              Guarda tus pesos y mira tu progreso.
+            </p>
           </div>
         </div>
 
-        {/* Opcional: links rápidos (si quieres) */}
-        {/* 
+        {/* Opcional: links rápidos */}
+        {/*
         <nav className="hidden items-center gap-2 sm:flex">
           <Link
             href="/home"
