@@ -1,13 +1,13 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function LoginPage() {
+export const dynamic = "force-dynamic";
+
+function LoginContent() {
   const router = useRouter();
   const params = useSearchParams();
   const callbackUrl = params.get("callbackUrl") || "/home";
@@ -44,6 +44,7 @@ export default function LoginPage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#0B0F14] text-white">
+      {/* Background glow */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-32 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-blue-600/20 blur-3xl" />
         <div className="absolute -bottom-40 right-[-120px] h-[520px] w-[520px] rounded-full bg-cyan-400/10 blur-3xl" />
@@ -144,6 +145,7 @@ export default function LoginPage() {
                   <span className="text-xs text-white/50">
                     Usa una contraseña segura.
                   </span>
+
                   <Link
                     href="/forgot-password"
                     className="text-xs font-semibold text-blue-300 hover:text-blue-200 hover:underline"
@@ -200,5 +202,13 @@ export default function LoginPage() {
         }
       `}</style>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#0B0F14]" />}>
+      <LoginContent />
+    </Suspense>
   );
 }
