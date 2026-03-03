@@ -1,9 +1,4 @@
-"use client";
-
-import { useMemo, useState } from "react";
-import Link from "next/link";
-
-type Category =
+export type Category =
   | "Todos"
   | "Pecho"
   | "Espalda"
@@ -16,14 +11,14 @@ type Category =
   | "Pantorrillas"
   | "Trapecio";
 
-type Exercise = {
-  id: string;        // slug para la URL (ej: "piernas-sentadilla-hack")
-  catalogId: number; // ESTE es el que se guarda en DB (Int)
+export type Exercise = {
+  id: string; // slug para URL
+  catalogId: number; // el que guardas en DB
   name: string;
   category: Exclude<Category, "Todos">;
 };
 
-const CATEGORIES: Category[] = [
+export const CATEGORIES: Category[] = [
   "Todos",
   "Pecho",
   "Espalda",
@@ -37,7 +32,7 @@ const CATEGORIES: Category[] = [
   "Trapecio",
 ];
 
-const MOCK_EXERCISES: Exercise[] = [
+export const EXERCISES_CATALOG: Exercise[] = [
   // PECHO
   { id: "pecho-press-banca", catalogId: 1, name: "Press banca (barra)", category: "Pecho" },
   { id: "pecho-press-mancuernas", catalogId: 2, name: "Press banca con mancuernas", category: "Pecho" },
@@ -129,99 +124,16 @@ const MOCK_EXERCISES: Exercise[] = [
   { id: "trapecio-remo-vertical", catalogId: 70, name: "Remo vertical (trapecio)", category: "Trapecio" },
 ];
 
-export default function ExercisesList() {
-  const [q, setQ] = useState("");
-  const [category, setCategory] = useState<Category>("Todos");
+export function filterExercises(
+  list: Exercise[],
+  category: Category,
+  q: string
+) {
+  const query = q.trim().toLowerCase();
+  let out = list;
 
-  const filtered = useMemo(() => {
-    const query = q.trim().toLowerCase();
-    let list = MOCK_EXERCISES;
+  if (category !== "Todos") out = out.filter((e) => e.category === category);
+  if (query) out = out.filter((e) => e.name.toLowerCase().includes(query));
 
-    if (category !== "Todos") list = list.filter((e) => e.category === category);
-    if (query) list = list.filter((e) => e.name.toLowerCase().includes(query));
-
-    return list;
-  }, [q, category]);
-
-  return (
-    <div className="rounded-2xl border bg-white p-4 shadow-sm">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-base font-bold text-neutral-900">Ejercicios</h2>
-          <p className="mt-1 text-sm text-neutral-600">
-            Elige una categoría y selecciona un ejercicio.
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <Link
-            href="/home"
-            className="rounded-xl border bg-white px-4 py-2 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-neutral-50"
-          >
-            ← Inicio
-          </Link>
-
-          <button
-            type="button"
-            className="rounded-xl bg-neutral-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-800"
-            onClick={() => alert("Luego lo conectamos para crear ejercicios 😉")}
-          >
-            + Nuevo
-          </button>
-        </div>
-      </div>
-
-      {/* Filtros */}
-      <div className="mt-4 grid gap-2 sm:grid-cols-2">
-        <div>
-          <label className="text-xs font-semibold text-neutral-700">Categoría</label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value as Category)}
-            className="mt-1 w-full rounded-xl border bg-white px-3 py-2 text-sm outline-none focus:border-neutral-400"
-          >
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="text-xs font-semibold text-neutral-700">Buscar</label>
-          <input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Buscar ejercicio…"
-            className="mt-1 w-full rounded-xl border px-3 py-2 text-sm outline-none focus:border-neutral-400"
-          />
-        </div>
-      </div>
-
-      {/* Lista */}
-      <div className="mt-4 grid gap-2 sm:grid-cols-2">
-        {filtered.map((e) => (
-          <Link
-            key={e.id}
-            href={`/entries/${e.id}?catalogId=${e.catalogId}&name=${encodeURIComponent(
-              e.name
-            )}&cat=${encodeURIComponent(e.category)}`}
-            className="rounded-xl border bg-white px-4 py-3 text-sm font-semibold text-neutral-900 shadow-sm transition hover:bg-neutral-50"
-          >
-            {e.name}
-            <span className="ml-2 text-xs font-semibold text-neutral-500">
-              Registrar →
-            </span>
-          </Link>
-        ))}
-
-        {filtered.length === 0 && (
-          <div className="rounded-xl border bg-neutral-50 px-4 py-3 text-sm text-neutral-600">
-            No se encontraron ejercicios.
-          </div>
-        )}
-      </div>
-    </div>
-  );
+  return out;
 }
