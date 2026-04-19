@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 
 type ExerciseItem = {
     id: string;
@@ -76,7 +76,6 @@ export default function WorkoutExercisePicker({
         }
     }
 
-    return (
     return (
         <section className="space-y-6 px-4 py-5 flex flex-col h-[calc(100vh-80px)]">
             <div className="sticky top-0 z-10 bg-bg-app pb-2">
