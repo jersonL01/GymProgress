@@ -1,42 +1,111 @@
-import AppHeader from "@/app/components/AppHeader";
-import HomeActions from "@/app/components/HomeActions";
-import StatCard from "@/app/components/StatCard";
-import LogoutButton from "@/app/components/LogoutButton";
-import UserBadge from "@/app/components/UserBadge";
-import ExerciseSummaryList from "@/app/components/ExerciseSummaryList";
+import BottomNav from "@/app/components/BottomNav";
+import RoutineCard from "@/app/components/RoutineCard";
+import NewRoutineButton from "@/app/components/NewRoutineButton";
+import { prisma } from "@/app/lib/prisma";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const user = await prisma.user.findFirst({
+    orderBy: { createdAt: "asc" },
+  });
+
+  let routines: {
+    id: string;
+    day: string;
+    exercises: string;
+  }[] = [];
+
+  if (user) {
+    const data = await prisma.routine.findMany({
+      where: { userId: user.id },
+      include: {
+        exercises: {
+          include: {
+            exercise: true,
+          },
+          orderBy: {
+            sortOrder: "asc",
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+
+    routines = data.map((routine) => ({
+      id: routine.id,
+      day: routine.name,
+      exercises:
+        routine.exercises.map((item) => item.exercise.nameEs || item.exercise.name).join(", ") ||
+        "Sin ejercicios",
+    }));
+  }
+
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#0B0F14] text-white">
-      {/* Background glow */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-32 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-blue-600/20 blur-3xl" />
-        <div className="absolute -bottom-40 right-[-120px] h-[520px] w-[520px] rounded-full bg-cyan-400/10 blur-3xl" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.06),transparent_45%),radial-gradient(circle_at_80%_0%,rgba(59,130,246,0.10),transparent_40%)]" />
-      </div>
-
-      <div className="relative">
-        <AppHeader />
-
-        <section className="mx-auto max-w-6xl px-4 py-8">
-          {/* Top bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <UserBadge />
-              <span className="hidden sm:inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
-                Gym Rat • Dashboard
-              </span>
+    <main className="min-h-screen bg-bg-base text-white pb-28">
+      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col bg-bg-app">
+        <header className="sticky top-0 z-20 border-b border-border-subtle bg-bg-app/80 px-5 pb-4 pt-8 backdrop-blur-xl">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-widest text-brand-light font-medium mb-1">
+                Entrenamiento
+              </p>
+              <h1 className="text-[32px] font-bold tracking-tight">
+                Tus <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-light to-brand-dark">Rutinas</span>
+              </h1>
             </div>
 
-            <LogoutButton />
+            <div className="rounded-full bg-brand/10 border border-brand/20 px-3 py-1.5 text-xs font-bold text-brand-light tracking-wide">
+              PRO
+            </div>
+          </div>
+        </header>
+
+        <section className="flex-1 space-y-6 px-4 py-6">
+          <div className="overflow-hidden relative rounded-[32px] border border-border-strong bg-surface-100 p-6 shadow-2xl">
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-brand/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="relative z-10">
+              <h2 className="text-[22px] font-semibold tracking-tight text-white">
+                Crear nueva rutina
+              </h2>
+              <p className="mt-2 text-[15px] leading-relaxed text-text-muted">
+                Diseña un plan a tu medida y organiza tus sesiones.
+              </p>
+
+              <div className="mt-6">
+                <NewRoutineButton />
+              </div>
+            </div>
           </div>
 
-          <ExerciseSummaryList/>
+          <div className="pt-2 flex items-center justify-between px-1">
+            <h3 className="text-lg font-semibold tracking-tight">Guardadas</h3>
+            <span className="text-sm text-text-dim">{routines.length} {routines.length === 1 ? 'rutina' : 'rutinas'}</span>
+          </div>
 
-          <div className="mt-6">
-            <HomeActions />
+          <div className="space-y-4">
+            {routines.length > 0 ? (
+              routines.map((routine) => (
+                <RoutineCard
+                  key={routine.id}
+                  id={routine.id}
+                  day={routine.day}
+                  exercises={routine.exercises}
+                />
+              ))
+            ) : (
+              <div className="flex flex-col items-center justify-center rounded-[32px] border border-border-subtle border-dashed bg-surface-50 p-10 text-center">
+                <div className="h-16 w-16 rounded-full bg-surface-200 flex items-center justify-center mb-4">
+                  <span className="text-2xl text-text-dim">🎯</span>
+                </div>
+                <p className="text-base font-medium text-white">Aún no hay rutinas</p>
+                <p className="mt-1 text-sm text-text-muted">Empieza creando tu primera rutina arriba.</p>
+              </div>
+            )}
           </div>
         </section>
+
+        <BottomNav />
       </div>
     </main>
   );
