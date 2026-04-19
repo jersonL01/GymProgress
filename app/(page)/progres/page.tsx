@@ -51,7 +51,6 @@ export default async function ProgresPage() {
       id: true,
       name: true,
       category: true,
-      catalogId: true,
       entries: {
         select: { date: true, weightKg: true, reps: true, sets: true },
         orderBy: { date: "desc" },
@@ -149,23 +148,10 @@ export default async function ProgresPage() {
                                 {ex.name}
                               </p>
                               <p className="mt-1 text-xs font-semibold text-white/50">
-                                catalogId: {ex.catalogId}
                               </p>
                             </div>
 
                             <div className="flex flex-col gap-2 sm:flex-row">
-                              <Link
-                                href={`/entries/${ex.id}?catalogId=${
-                                  ex.catalogId
-                                }&name=${encodeURIComponent(
-                                  ex.name
-                                )}&cat=${encodeURIComponent(
-                                  ex.category ?? "Sin categoría"
-                                )}`}
-                                className="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white shadow-[0_14px_40px_rgba(37,99,235,0.30)] transition hover:bg-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/25"
-                              >
-                                + Registrar
-                              </Link>
 
                               <Link
                                 href={`/progres/ejercicio/${ex.id}`}

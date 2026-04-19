@@ -60,7 +60,7 @@ export async function POST(req: Request) {
 
   // Buscar o crear exercise
   const existing = await prisma.exercise.findFirst({
-    where: { userId, catalogId },
+    where: { userId},
     select: { id: true },
   });
 
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
         select: { id: true },
       })
     : await prisma.exercise.create({
-        data: { userId, catalogId, name, category },
+        data: { userId, name, category },
         select: { id: true },
       });
 

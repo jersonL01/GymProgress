@@ -16,7 +16,6 @@ export async function GET(_req: Request, context: any) {
       id: true,
       name: true,
       category: true,
-      catalogId: true,
       entries: {
         select: { id: true, date: true, weightKg: true, reps: true, sets: true, notes: true },
         orderBy: { date: "desc" },
